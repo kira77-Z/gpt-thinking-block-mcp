@@ -34,6 +34,7 @@ export function createThinkingServer(): McpServer {
       },
       _meta: {
         securitySchemes: NO_AUTH_SECURITY,
+        ui: { resourceUri: WIDGET_URI },
         "openai/outputTemplate": WIDGET_URI,
         "openai/toolInvocation/invoking": "展开纸边心绪",
         "openai/toolInvocation/invoked": "心绪已展开",

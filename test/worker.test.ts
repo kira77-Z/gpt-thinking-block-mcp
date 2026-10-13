@@ -75,6 +75,10 @@ describe("Cloudflare heart-window Worker", () => {
     const tools = listed.result?.tools as Array<Record<string, unknown>>;
     expect(tools).toHaveLength(1);
     expect(tools[0].name).toBe("render_think_block");
+    expect(tools[0]._meta).toMatchObject({
+      ui: { resourceUri: WIDGET_URI },
+      "openai/outputTemplate": WIDGET_URI,
+    });
     expect(Object.keys((tools[0].inputSchema as { properties: object }).properties)).toEqual([
       "content",
       "mode",
