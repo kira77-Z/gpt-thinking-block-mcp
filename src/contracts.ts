@@ -6,6 +6,7 @@ export type Skin = "paper" | "ink";
 
 export interface RenderInput {
   content: string;
+  title?: string;
   mode?: Mode;
   effort?: Effort;
   skin?: Skin | "botanical" | "microglow";
@@ -13,6 +14,7 @@ export interface RenderInput {
 
 export interface RenderViewModel {
   content: string;
+  title: string;
   mode: Mode;
   effort: Effort;
   skin: Skin;
@@ -27,10 +29,28 @@ export const EFFORT_LIMITS: Readonly<Record<Effort, number>> = Object.freeze({
 
 export const renderInputSchema = z.object({
   content: z.string().trim().min(1),
+  title: z.string().optional().describe(
+    "根据每轮内容拟定的 2–12 个字符动态题签；保持单行，不用句号结尾。",
+  ),
   mode: z.enum(["relational", "deep_think"]).optional(),
   effort: z.enum(["low", "medium", "high"]).optional(),
   skin: z.enum(["paper", "ink", "botanical", "microglow"]).optional(),
 });
+
+const TITLE_LIMIT = 12;
+
+export function normalizeTitle(title: string | undefined, mode: Mode): string {
+  const fallback = mode === "deep_think" ? "推敲" : "此刻";
+  if (typeof title !== "string") return fallback;
+
+  const normalized = title
+    .trim()
+    .replace(/\s+/gu, " ")
+    .replace(/[。！？!?…，,；;：:]+$/gu, "")
+    .trim();
+  const characters = Array.from(normalized).slice(0, TITLE_LIMIT);
+  return characters.length >= 2 ? characters.join("") : fallback;
+}
 
 const skinAliases: Record<NonNullable<RenderInput["skin"]>, Skin> = {
   paper: "paper",
@@ -70,6 +90,7 @@ export function normalizeRenderInput(raw: unknown): RenderViewModel {
 
   return {
     content: truncateAtSentence(parsed.content, EFFORT_LIMITS[effort]),
+    title: normalizeTitle(parsed.title, mode),
     mode,
     effort,
     skin,

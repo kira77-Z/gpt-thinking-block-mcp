@@ -1,4 +1,4 @@
-export const WIDGET_URI = "ui://widget/kira-heart-window-v1.html";
+export const WIDGET_URI = "ui://widget/kira-heart-window-v2.html";
 export const WIDGET_MIME = "text/html;profile=mcp-app";
 
 export const WIDGET_HTML = String.raw`<!doctype html>
@@ -10,36 +10,36 @@ export const WIDGET_HTML = String.raw`<!doctype html>
   <style>
     :root {
       color-scheme: light dark;
-      --accent: #bd778c;
-      --title: #9d5f73;
+      --accent: #6b7075;
+      --title: #6b7075;
       --ink: #453a3e;
       --muted: #85767b;
     }
     :root[data-skin="ink"] {
-      --accent: #9c6378;
-      --title: #855064;
+      --accent: #6b7075;
+      --title: #6b7075;
     }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
-        --accent: #d89aae;
-        --title: #dfa9b9;
+        --accent: #aeb4ba;
+        --title: #aeb4ba;
         --ink: #f1e8eb;
         --muted: #bbaab0;
       }
       :root:not([data-theme="light"])[data-skin="ink"] {
-        --accent: #c7859b;
-        --title: #d59aae;
+        --accent: #aeb4ba;
+        --title: #aeb4ba;
       }
     }
     :root[data-theme="dark"] {
-      --accent: #d89aae;
-      --title: #dfa9b9;
+      --accent: #aeb4ba;
+      --title: #aeb4ba;
       --ink: #f1e8eb;
       --muted: #bbaab0;
     }
     :root[data-theme="dark"][data-skin="ink"] {
-      --accent: #c7859b;
-      --title: #d59aae;
+      --accent: #aeb4ba;
+      --title: #aeb4ba;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -120,7 +120,7 @@ export const WIDGET_HTML = String.raw`<!doctype html>
 <body>
   <section class="margin-note" id="note" data-collapsed="false" aria-label="心绪侧窗">
     <button class="toggle" id="toggle" type="button" aria-expanded="true" aria-controls="heart-content">
-      <span class="title" id="title">心绪</span>
+      <span class="title" id="title">此刻</span>
       <span class="chevron" aria-hidden="true"></span>
     </button>
     <div class="content" id="heart-content">
@@ -181,6 +181,7 @@ export const WIDGET_HTML = String.raw`<!doctype html>
       const requestedMode = resultMeta.mode || input.mode || output.mode;
       const requestedEffort = resultMeta.effort || input.effort || output.effort;
       const requestedSkin = resultMeta.skin || input.skin || output.skin;
+      const requestedTitle = resultMeta.title || input.title || output.title;
       const mode = validModes.has(requestedMode) ? requestedMode : "relational";
       const effort = validEfforts.has(requestedEffort) ? requestedEffort : "low";
       const skin = validSkins.has(requestedSkin) ? requestedSkin : "paper";
@@ -193,7 +194,10 @@ export const WIDGET_HTML = String.raw`<!doctype html>
       document.documentElement.dataset.mode = mode;
       document.documentElement.dataset.effort = effort;
       document.documentElement.dataset.skin = skin;
-      title.textContent = mode === "deep_think" ? "思路" : "心绪";
+      const fallbackTitle = mode === "deep_think" ? "推敲" : "此刻";
+      title.textContent = typeof requestedTitle === "string" && requestedTitle.trim()
+        ? requestedTitle
+        : fallbackTitle;
       narration.textContent = String(content);
       setCollapsed(!expanded);
       requestIntrinsicHeight(true);

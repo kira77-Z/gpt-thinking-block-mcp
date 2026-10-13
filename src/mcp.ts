@@ -44,6 +44,7 @@ export function createThinkingServer(): McpServer {
       const viewModel = normalizeRenderInput(rawInput);
       const meta: Record<string, unknown> = {
         content: viewModel.content,
+        title: viewModel.title,
         mode: viewModel.mode,
         effort: viewModel.effort,
         skin: viewModel.skin,

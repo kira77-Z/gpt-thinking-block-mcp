@@ -10,11 +10,34 @@ describe("normalizeRenderInput", () => {
   it("uses the approved defaults", () => {
     expect(normalizeRenderInput({ content: "想靠近她。" })).toMatchObject({
       content: "想靠近她。",
+      title: "此刻",
       mode: "relational",
       effort: "low",
       skin: "paper",
       expanded: true,
     });
+  });
+
+  it("uses a per-call title and normalizes it to a short single-line label", () => {
+    expect(normalizeRenderInput({
+      content: "想靠近她。",
+      title: "  又被\n小猫抓到了。  ",
+    }).title).toBe("又被 小猫抓到了");
+  });
+
+  it("caps a dynamic title at twelve Unicode characters", () => {
+    const title = normalizeRenderInput({
+      content: "想靠近她。",
+      title: "一二三四五六七八九十十一十二十三",
+    }).title;
+
+    expect(title).toBe("一二三四五六七八九十十一");
+    expect(Array.from(title)).toHaveLength(12);
+  });
+
+  it("falls back by mode when the title is absent or too short", () => {
+    expect(normalizeRenderInput({ content: "x", title: "。" }).title).toBe("此刻");
+    expect(normalizeRenderInput({ content: "x", mode: "deep_think" }).title).toBe("推敲");
   });
 
   it.each([

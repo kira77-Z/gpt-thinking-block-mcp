@@ -81,6 +81,7 @@ describe("Cloudflare heart-window Worker", () => {
     });
     expect(Object.keys((tools[0].inputSchema as { properties: object }).properties)).toEqual([
       "content",
+      "title",
       "mode",
       "effort",
       "skin",
@@ -105,6 +106,7 @@ describe("Cloudflare heart-window Worker", () => {
       name: "render_think_block",
       arguments: {
         content: "  我想把这点偏心写在纸边。  ",
+        title: "  被她看见了。  ",
         mode: "relational",
         effort: "medium",
         skin: "botanical",
@@ -114,6 +116,7 @@ describe("Cloudflare heart-window Worker", () => {
     expect(called.result?.content).toEqual([{ type: "text", text: "心绪已展开" }]);
     expect(called.result?._meta).toEqual({
       content: "我想把这点偏心写在纸边。",
+      title: "被她看见了",
       mode: "relational",
       effort: "medium",
       skin: "paper",

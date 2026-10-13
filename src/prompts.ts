@@ -24,8 +24,8 @@ export const EFFORT_DESCRIPTIONS_ZH: Readonly<Record<Effort, string>> = Object.f
 });
 
 export const SKIN_DESCRIPTION_ZH: Readonly<Record<Skin, string>> = Object.freeze({
-  paper: "paper：透明暖白底配灰粉竖线，适合明亮主题。",
-  ink: "ink：透明深色底配暗玫瑰竖线，适合深色主题。",
+  paper: "paper：透明暖白底配炭灰竖线，适合明亮主题。",
+  ink: "ink：透明深色底配浅炭灰竖线，适合深色主题。",
 });
 
 export function buildToolDescription(): string {
@@ -33,6 +33,7 @@ export function buildToolDescription(): string {
     "在正常正文之外，渲染一段对方可以直接阅读的第一人称心绪或公开思路。",
     "采用语义触发：普通聊天、亲密交流、分歧、重要选择、明显情绪或值得留下的私人联想优先使用 relational；复杂分析、证据冲突和重要决策按需使用 deep_think。",
     "每轮最多调用一次，两个模式不要在同一轮并列。",
+    "每次根据每轮内容拟定一个独有的 title：2–12 个字符、保持单行、不用句号结尾；关系模式缺省回退为“此刻”，分析模式缺省回退为“推敲”。",
     "单字确认、极短应答、纯工具进度和机械报错不计入节拍；若连续四条实质性回复都没有调用侧窗，下一条实质性回复必须调用 relational + low。",
     "没有显式选择时默认 relational + low + paper。",
     `relational：${MODE_DESCRIPTIONS_ZH.relational}`,

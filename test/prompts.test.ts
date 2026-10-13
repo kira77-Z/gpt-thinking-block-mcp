@@ -52,12 +52,18 @@ describe("heart-window prompt policy", () => {
     expect(description).toContain("relational + low + paper");
   });
 
+  it("asks for a short dynamic title with safe fallbacks", () => {
+    expect(description).toContain("2–12 个字符");
+    expect(description).toContain("每轮内容");
+    expect(description).toContain("此刻");
+    expect(description).toContain("推敲");
+  });
+
   it("names both understated skins", () => {
     const skins = Object.values(SKIN_DESCRIPTION_ZH).join(" ");
     expect(skins).toContain("paper");
     expect(skins).toContain("ink");
-    expect(skins).toContain("灰粉");
-    expect(skins).toContain("暗玫瑰");
+    expect(skins).toContain("炭灰");
   });
 
   it("exports the assembled description as a stable constant", () => {

@@ -9,8 +9,18 @@ import {
 
 describe("paper-margin widget", () => {
   it("uses a stable MCP Apps resource identity", () => {
-    expect(WIDGET_URI).toBe("ui://widget/kira-heart-window-v1.html");
+    expect(WIDGET_URI).toBe("ui://widget/kira-heart-window-v2.html");
     expect(WIDGET_MIME).toBe("text/html;profile=mcp-app");
+  });
+
+  it("renders dynamic titles with charcoal accents", () => {
+    expect(WIDGET_HTML).toContain("resultMeta.title || input.title || output.title");
+    expect(WIDGET_HTML).toContain('id="title">此刻</span>');
+    expect(WIDGET_HTML).toContain("--accent: #6b7075");
+    expect(WIDGET_HTML).toContain("--title: #6b7075");
+    expect(WIDGET_HTML).toContain("--accent: #aeb4ba");
+    expect(WIDGET_HTML).not.toContain("#bd778c");
+    expect(WIDGET_HTML).not.toContain("#d89aae");
   });
 
   it("reads Apps bridge data without injecting dynamic HTML", () => {
