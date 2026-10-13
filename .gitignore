@@ -4,3 +4,6 @@ __pycache__/
 .env
 captured.jsonl
 captured/*.jsonl
+.worktrees/
+node_modules/
+.wrangler/

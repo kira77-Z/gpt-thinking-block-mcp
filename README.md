@@ -9,6 +9,8 @@
 
 Sometimes the final answer is not the only thing worth seeing. We also want to know which constraints GPT noticed, which paths it compared, where it remained uncertain, and what tradeoffs shaped the result. GPT Thinking Block MCP turns that process into a visible card before the final answer—something users can read, collapse, tune, and make their own.
 
+The personalized Cloudflare Worker in this fork uses a much quieter paper-margin note. Its text is **public, deliberately prepared narration**, not hidden chain-of-thought or a transcript of private model reasoning.
+
 This is more than placing text inside a polished frame. Giving the model an explicit working step before its final response creates room to track constraints, catch omissions, compare alternatives, and organize uncertainty. The thinking block becomes part of the current turn, so it can meaningfully shape the answer that follows while making the reasoning easier to inspect, steer, and refine.
 
 Choose `deep_think` for analytical work or `relational` for a natural first-person companion voice. Use `low`, `medium`, or `high` to control how much visible thinking the turn receives, or rewrite the token bands entirely. Choose the warm `botanical` skin or the pearl-and-ice `microglow` skin independently for each card. The card is rendered through the MCP Apps UI model supported by compatible hosts, and its palette, borders, typography, badges, spacing, dark mode, and collapse behavior are all yours to customize.
@@ -54,6 +56,23 @@ These are prompt-level target bands, not hard server-side limits. `low` may stop
 Each skin is a set of CSS variables inside `WIDGET_HTML`. To switch, add, or tweak a skin, describe what you want to a coding agent — for example, ask Codex to switch to a different palette or create a new skin. More skins may be added in future updates.
 
 ## Quick start
+
+### Deploy the personalized Cloudflare Worker
+
+This fork includes a separate TypeScript Worker for Kira's short `心绪 / 思路` margin note. It needs no credit card, Railway, Render, Durable Object, KV, or database. The Worker exposes only `/health` and the Streamable HTTP MCP endpoint `/mcp`; it does not add the Python server's `/think` or `/openapi.json` routes.
+
+```bash
+npm install
+npm test -- --run
+npm run dev
+npm run deploy
+```
+
+The Worker tool is `render_think_block`, with `mode`, `effort`, and `skin`. Its defaults are `relational + low + paper`; after four substantive replies without a note, the next substantive reply should force `relational + low`. Its skins are `paper` and `ink`.
+
+For phone/browser deployment through GitHub-connected Cloudflare Workers Builds and the exact ChatGPT connector URL, see [Cloudflare deployment](./docs/CLOUDFLARE.md).
+
+> The original Python/Docker implementation remains intact below. It still uses `render_thinking_block`, `style`, and the `botanical` / `microglow` skins.
 
 ### Choose a prompt edition
 
@@ -115,6 +134,12 @@ docker compose down
 ```
 
 ## Use it
+
+### Personalized Worker prompt
+
+> Use `render_think_block` when a public heart-note or key reasoning note would add something distinct from the reply. Choose `mode`, `effort`, and `skin` from context, call it at most once per assistant turn, and keep the normal reply separate. Default to `relational + low + paper`. If four substantive assistant replies pass without a note, the next substantive reply must call `relational + low`. The note is prepared public narration, not hidden chain-of-thought.
+
+### Original Python prompt
 
 Ask the model to call the tool before answering:
 

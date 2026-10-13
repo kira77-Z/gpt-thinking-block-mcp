@@ -2,6 +2,20 @@
 
 These examples assume the tool is already connected and enabled.
 
+## Personalized Cloudflare Worker
+
+The Worker tool is `render_think_block` (not the Python server's `render_thinking_block`). Its block is prepared public narration, not hidden chain-of-thought.
+
+> Use `render_think_block` when a public heart-note or key reasoning note would add something distinct from the reply. Choose `mode`, `effort`, and `skin` from context and call it at most once per assistant turn. Default to `relational + low + paper`. If four substantive assistant replies pass without a block, the next substantive reply must call `relational + low`. Keep the normal reply separate from the block.
+
+中文版：
+
+> 当公开心绪或关键思路能补充正文时，调用 `render_think_block`。根据语境选择 `mode`、`effort` 与 `skin`，每轮最多调用一次。默认使用 `relational + low + paper`。如果连续四条实质性回复都没有侧窗，下一条实质性回复必须调用 `relational + low`。让正常回复与侧窗分开；侧窗是准备给我阅读的公开叙述，不是隐藏思维链。
+
+## Original Python server
+
+The examples below keep the original `render_thinking_block` name and its original fields and skins.
+
 ## English
 
 ### Deep think, fixed effort

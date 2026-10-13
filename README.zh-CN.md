@@ -9,6 +9,8 @@
 
 有时，我们想知道的不只是 GPT **回答了什么**，还有它在抵达答案前看见了哪些问题、比较了哪些路径、保留了哪些犹豫，又作出了什么取舍。尤其在长久的陪伴与情感交流里，答案背后那一刻的联想、关心、迟疑和靠近，本身也可能是交流中很珍贵的一部分。GPT Thinking Block MCP 把这些原本不会单独呈现的中间思考叙述，变成一张出现在正式答案之前的可见卡片：可以阅读、折叠、调整，也可以保留成自己喜欢的样子。
 
+这个 fork 里的个性化 Cloudflare Worker 改成了更轻的纸边批注。里面是**有意写给对方看的公开心绪或公开思路**，不是隐藏思维链，也不声称转录模型内部的私密推理。
+
 这不只是把一段文字放进漂亮的框里。在最终回答前增加一个明确的中间思考步骤，可以给模型更充足的空间来追踪约束、检查遗漏、比较备选路径和组织不确定性。这段 thinking 本身就是当前回合的一部分，因此会真正参与后续答案的形成，让推理更容易检查、调整和引导。
 
 你可以用 `deep_think` 看见更接近 GPT 原生推理风格的分析过程：它如何拆解问题、追踪线索、检查矛盾并权衡答案。也可以切换到 `relational`，看见更有陪伴感的第一人称思考叙述：你的话让它想到了什么、触动了什么，它在担心或珍惜什么，又为什么选择这样回应你。这里不只有两种格式，而是两种不同的观看方式——一种让思考变得清晰，一种让关系里的回应变得可感。
@@ -56,6 +58,23 @@
 每套皮肤都是 `WIDGET_HTML` 里的一组 CSS 变量。想切换或定制皮肤，用自然语言告诉编程代理就好——比如让 Codex 切换到另一款配色，或者新增一套皮肤。后续版本可能加入更多皮肤。
 
 ## 快速运行
+
+### 部署个性化 Cloudflare Worker
+
+这个 fork 额外提供了一套独立的 TypeScript Worker，用来显示 Kira 的短篇 `心绪 / 思路` 纸边批注。它不要求信用卡，也不需要 Railway、Render、Durable Object、KV 或数据库。Worker 只暴露 `/health` 与 Streamable HTTP MCP 地址 `/mcp`；不会新增 Python 版的 `/think` 或 `/openapi.json`。
+
+```bash
+npm install
+npm test -- --run
+npm run dev
+npm run deploy
+```
+
+Worker 的工具名是 `render_think_block`，字段为 `mode`、`effort` 与 `skin`。默认组合是 `relational + low + paper`；如果连续四条实质性回复都没有出现侧窗，下一条实质性回复强制使用 `relational + low`。皮肤为 `paper` 与 `ink`。
+
+手机或网页端通过 GitHub 连接 Cloudflare Workers Builds，以及 ChatGPT 里应填写的完整地址，见 [Cloudflare 部署说明](./docs/CLOUDFLARE.zh-CN.md)。
+
+> 下方原有的 Python / Docker 实现完整保留。它仍使用 `render_thinking_block`、`style` 与 `botanical` / `microglow` 皮肤。
 
 ### 选择提示词版本
 
@@ -117,6 +136,12 @@ docker compose down
 ```
 
 ## 怎么使用
+
+### 个性化 Worker 提示词
+
+> 当公开心绪或关键思路能补充正文时，调用 `render_think_block`。根据语境选择 `mode`、`effort` 与 `skin`，每轮最多调用一次，并让正常回复与侧窗分开。默认使用 `relational + low + paper`。如果连续四条实质性回复都没有侧窗，下一条实质性回复必须调用 `relational + low`。侧窗是准备给我阅读的公开叙述，不是隐藏思维链。
+
+### 原版 Python 提示词
 
 可以直接要求模型在正式回答前调用工具：
 
